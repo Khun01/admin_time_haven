@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:slide_to_act/slide_to_act.dart';
-import 'package:time_haven/screens/HomeFavoriteCartProfilePage/home_page.dart';
+import 'package:time_haven/navigation/mainwrapper.dart';
 import 'package:time_haven/screens/LoginRegisterPage/login_page.dart';
 import 'package:time_haven/screens/LoginRegisterPage/register_page.dart';
 import 'package:time_haven/services/shared_preferences.dart';
@@ -28,30 +27,10 @@ class _LandingPageState extends State<LandingPage> {
       WidgetsBinding.instance.addPostFrameCallback((_){
         Navigator.push(
           context, 
-          MaterialPageRoute(builder: (context) => const HomePage())
+          MaterialPageRoute(builder: (context) => const Mainwrapper())
         );
       });
     }
-  }
-
-  Future<bool> onWillPop(BuildContext context) async{
-    return (await showDialog(
-      context: context, 
-      builder: (context) => AlertDialog(
-        title: const Text('Confirm Exit'),
-        content: const Text('Do you want to quit the app?'),
-        actions: <Widget>[
-          TextButton(
-            onPressed: () => Navigator.of(context).pop(false), 
-            child: const Text('No'),
-          ),
-          TextButton(
-            onPressed: () => SystemNavigator.pop(),
-            child: const Text('Yes'),
-          ),
-        ],
-      )
-    )) ?? false;
   }
 
   @override

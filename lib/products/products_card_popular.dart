@@ -22,16 +22,17 @@ class ProductsCard extends StatelessWidget {
   Widget build(BuildContext context) {
     double popularityValue = double.tryParse(popularity) ?? 0;
     return Container(
-      margin: const EdgeInsets.only(bottom: 20),
+      margin: const EdgeInsets.symmetric(horizontal: 25, vertical: 15),
       width: MediaQuery.of(context).size.width,
-      height: 180,
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(15),
         gradient: const LinearGradient(
-          colors: [
+           colors: [
+            Color(0xFFEDBE00),
             Color(0xFFB8860B),
             Color(0xFFEDBE00),
             Color(0xFF9E7206),
+            Color(0XFFC59803),
           ],
           begin: Alignment.topLeft,
           end: Alignment.bottomRight
@@ -39,37 +40,35 @@ class ProductsCard extends StatelessWidget {
         boxShadow: [
           BoxShadow(
             color: Colors.black.withOpacity(0.6),
-            offset: const Offset(
-              0.0,
-              10.0,
-            ),
+            offset: const Offset(0.0, 10.0),
             blurRadius: 10.0,
-            spreadRadius: -6.0,
+            spreadRadius: -6.0
           ),
         ],
       ),
       child: Stack(
+        clipBehavior: Clip.none,
         children: [
           Row(
             children: [
               Container(
-                padding: const EdgeInsets.all(25),
+                margin: const EdgeInsets.only(top: 20, bottom: 20, left: 20),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
                       brand,
                       style: GoogleFonts.nunito(
-                        fontSize: 20,
-                        fontWeight: FontWeight.w900,
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
                         color: const Color(0xFFF4F4F4)
                       ),
                     ),
                     Text(
                       name,
                       style: GoogleFonts.nunito(
-                        fontSize: 16,
-                        fontWeight: FontWeight.w700,
+                        fontSize: 12,
+                        fontWeight: FontWeight.bold,
                         color: const Color(0xCCF4F4F4)
                       ),
                     ),
@@ -79,9 +78,9 @@ class ProductsCard extends StatelessWidget {
                         Row(
                           children: List.generate(5, (index){
                             if(index < popularityValue.floor()){
-                              return const Icon(Icons.star, color: Colors.yellow, size: 20);
+                              return const Icon(Icons.star, color: Colors.yellow, size: 15);
                             }
-                            return const Icon(Icons.star_outline, color: Colors.yellow, size: 20);
+                            return const Icon(Icons.star_outline, color: Colors.yellow, size: 15);
                           }),
                         ),
                         const SizedBox(width: 3),
@@ -90,34 +89,35 @@ class ProductsCard extends StatelessWidget {
                           style: GoogleFonts.nunito(
                             color: const Color(0xCCF4F4F4),
                             fontWeight: FontWeight.w700,
-                            fontSize: 12
+                            fontSize: 10
                           ),
                         ),
                       ],
                     ),
+                    const SizedBox(height: 5),
                     Text(
-                      '₱ $price',
+                      '$price PHP',
                       style: GoogleFonts.nunito(
-                        fontSize: 12,
-                        fontWeight: FontWeight.w700,
+                        fontSize: 10,
+                        fontWeight: FontWeight.bold,
                         color: const Color(0xCCF4F4F4)
                       ),
-                    ),
+                    )
                   ],
                 ),
               ),
               const Spacer(),
               Container(
-                margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-                width: 140,
+                margin: const EdgeInsets.all(10),
+                width: 100,
                 decoration: BoxDecoration(
                   image: DecorationImage(
                     image: NetworkImage(image1),
-                    fit: BoxFit.cover
+                    fit: BoxFit.cover,
                   )
                 ),
-              )
-            ],    
+              ),
+            ],
           )
         ],
       ),
