@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:time_haven/components/favorite_icon.dart';
 import 'package:time_haven/models/products.dart';
-import 'package:time_haven/services/shared_preferences.dart';
 
 class ProductsNewArrival extends StatefulWidget {
 

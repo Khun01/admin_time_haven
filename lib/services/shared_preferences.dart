@@ -1,6 +1,4 @@
 import 'dart:convert';
-import 'dart:ffi';
-
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:time_haven/models/products.dart';
 import 'package:time_haven/services/auth_services.dart';
