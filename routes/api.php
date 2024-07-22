@@ -18,6 +18,12 @@ Route::group(['middleware' => ["auth:sanctum"]],function(){
     Route::get("logout", [ApiController::class,"logout"]);
     //Product
     Route::get('products', [ProductController::class, 'index']);
+    //Add to favorites
+    Route::post('favorites/{productId}', [ProductController::class, 'addToFavorites']);
+    //Removed from favorites
+    Route::delete('favorites/{productId}', [ProductController::class, 'removeFromFavorites']);
+    //show favorites
+    Route::get('favorites', [ProductController::class, 'getFavorites']);
 });
 
 // Route::get('/user', function (Request $request) {
