@@ -1,8 +1,15 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:time_haven/components/favorite_icon.dart';
+import 'package:time_haven/models/products.dart';
+import 'package:time_haven/services/auth_services.dart';
+import 'package:time_haven/services/shared_preferences.dart';
 
-class ProductsFavorite extends StatelessWidget {
+class ProductsFavorite extends StatefulWidget {
 
+  final Products product;
   final String image;
   final String name;
   final String description;
@@ -11,6 +18,7 @@ class ProductsFavorite extends StatelessWidget {
 
   const ProductsFavorite({
     super.key,
+    required this.product,
     required this.image,
     required this.name,
     required this.description,
@@ -19,8 +27,42 @@ class ProductsFavorite extends StatelessWidget {
   });
 
   @override
+  State<ProductsFavorite> createState() => _ProductsFavoriteState();
+}
+
+class _ProductsFavoriteState extends State<ProductsFavorite> {
+
+  int? userId;
+
+  @override
+  void initState(){
+    super.initState();
+    loadUserData();
+  }
+
+  Future<void> loadUserData() async{
+    String? userJson = await SharedPreferencesUtil.getUser();
+    try{
+      if(userJson != null){
+        var userMap = jsonDecode(userJson);
+        setState(() {
+          userId = userMap['id'];
+        });
+        logger.d('User is this: $userId');
+      }
+    }catch(e){
+      logger.e('Failed to load user data: $e');
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
-    double popularityValue = double.tryParse(popularity) ?? 0;
+    double popularityValue = double.tryParse(widget.popularity) ?? 0;
+    if(userId == null){
+      return Container(
+        child: Center(child: CircularProgressIndicator()),
+      );
+    }
     return Container(
       padding: const EdgeInsets.all(7.5),
       margin: const EdgeInsets.symmetric(vertical: 10),
@@ -59,7 +101,7 @@ class ProductsFavorite extends StatelessWidget {
               ),
             ),
             child: Image.network(
-              image,
+              widget.image,
               fit: BoxFit.cover,
             ),
           ),
@@ -68,19 +110,27 @@ class ProductsFavorite extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(
-                  name,
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                  style: GoogleFonts.nunito(
-                    fontSize: 16,
-                    fontWeight: FontWeight.bold,
-                    color: const Color(0xFF3B3B3B)
-                  ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Flexible(
+                      child: Text(
+                        widget.name,
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        style: GoogleFonts.nunito(
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                          color: const Color(0xFF3B3B3B)
+                        ),
+                      ),
+                    ),
+                    FavoriteIcon(products: widget.product, iconSize: 20, userId: userId.toString()),
+                  ],
                 ),
                 const SizedBox(height: 2.5),
                 Text(
-                  description,
+                  widget.description,
                   maxLines: 3,
                   overflow: TextOverflow.ellipsis,
                   style: GoogleFonts.nunito(
@@ -103,7 +153,7 @@ class ProductsFavorite extends StatelessWidget {
                 ),
                 const SizedBox(height: 2.5),
                 Text(
-                  '$price PHP',
+                  '${widget.price} PHP',
                   style: GoogleFonts.nunito(
                     fontSize: 12,
                     fontWeight: FontWeight.bold,

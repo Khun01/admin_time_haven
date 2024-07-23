@@ -6,6 +6,7 @@ import 'package:http/http.dart' as http;
 import 'package:time_haven/components/form_login_signin.dart';
 import 'package:time_haven/components/my_button.dart';
 import 'package:time_haven/components/squaretile.dart';
+import 'package:time_haven/navigation/mainwrapper.dart';
 import 'package:time_haven/screens/HomeFavoriteCartProfilePage/home_page.dart';
 import 'package:time_haven/services/auth_services.dart';
 import 'package:time_haven/services/global.dart';
@@ -50,7 +51,7 @@ class _LoginPageState extends State<LoginPage> {
             Navigator.of(context).pop();
             Navigator.push(
               context,
-              MaterialPageRoute(builder: (context) => const HomePage())
+              MaterialPageRoute(builder: (context) => const Mainwrapper())
             );
           }
         }else{

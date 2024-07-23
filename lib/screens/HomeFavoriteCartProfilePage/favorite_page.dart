@@ -109,6 +109,7 @@ class _FavoritePageState extends State<FavoritePage> {
                 itemCount: products.length,
                 itemBuilder: (context, index){
                   return ProductsFavorite(
+                    product: products[index],
                     image: '$baseUrl${products[index].image1}', 
                     name: products[index].name,
                     description: products[index].description,

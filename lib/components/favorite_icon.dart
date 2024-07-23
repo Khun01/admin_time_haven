@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:time_haven/models/products.dart';
 import 'package:time_haven/services/auth_services.dart';
@@ -6,10 +8,14 @@ import 'package:time_haven/services/shared_preferences.dart';
 class FavoriteIcon extends StatefulWidget {
 
   final Products products;
+  final int iconSize;
+  final String? userId;
 
   const FavoriteIcon({
     super.key,
     required this.products,
+    this.iconSize = 14,
+    required this.userId,
   });
 
   @override
@@ -25,23 +31,27 @@ class _FavoriteIconState extends State<FavoriteIcon> {
     _checkIfFavorite();
   }
 
-  void _checkIfFavorite() async {
-   try{
-    List<int> favoriteIds = await SharedPreferencesUtil.getProductId();
-    setState(() {
-      isFavorite = favoriteIds.contains(int.parse(widget.products.id.toString()));
-    });
-    logger.d('Product ${widget.products.id} isFavorite: $isFavorite');
-   }catch(e){
-    logger.d('Error checking if favorite: $e');
-   }
+  Future<void> _checkIfFavorite() async{
+    if (widget.userId == null || widget.userId!.isEmpty) {
+      logger.d('User ID is null, cannot check favorite status');
+      return;
+    }
+    try {
+      List<int> favoriteIds = await SharedPreferencesUtil.getProductId(widget.userId!);
+      setState(() {
+        isFavorite = favoriteIds.contains(int.parse(widget.products.id.toString()));
+      });
+      logger.d('User ${widget.userId} - Product ${widget.products.id} isFavorite: $isFavorite');
+    }catch(e){
+      logger.d('Error cehcking if favorite: $e');
+    }
   }
 
   Future<void> toggleFavorites() async{
     if(isFavorite){
       bool result = await AuthServices.removeFromFavorites(widget.products.id.toString());
       if(result){
-        await SharedPreferencesUtil.removeProducts(widget.products.id.toString());
+        await SharedPreferencesUtil.removeProducts(widget.userId!, widget.products.id.toString());
         setState(() {
           isFavorite = false;
         });
@@ -51,7 +61,7 @@ class _FavoriteIconState extends State<FavoriteIcon> {
     }else{
       bool result = await AuthServices.addToFavorites(widget.products.id.toString());
       if(result){
-        await SharedPreferencesUtil.saveProduct(widget.products);
+        await SharedPreferencesUtil.saveProduct(widget.userId!, widget.products);
         setState(() {
           isFavorite = true;
         });
@@ -68,7 +78,7 @@ class _FavoriteIconState extends State<FavoriteIcon> {
       child: Icon(
         isFavorite ? Icons.favorite : Icons.favorite_outline,
         color: const Color(0xFFE2B34B),
-        size: 14,
+        size: widget.iconSize.toDouble(),
       ),
     );
   }

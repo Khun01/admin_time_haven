@@ -66,36 +66,6 @@ class _HomePageState extends State<HomePage> {
     setState(() {});
   }
 
-  void loggedOutUser(BuildContext context) async{
-    final shouldLogout = await showDialog(
-      context: context, 
-      builder: (context) => AlertDialog(
-        title: const Text('Confirm Logout'),
-        content: const Text('Are you sure you want to log out?'),
-        actions: <Widget>[
-          TextButton(
-            onPressed: () => Navigator.of(context).pop(false), 
-            child: const Text('No')
-          ),
-          TextButton(
-            onPressed: () => Navigator.of(context).pop(false), 
-            child: const Text('Yes'),
-          ),
-        ],
-      ),
-    );
-    if(shouldLogout == true){
-      if(context.mounted){
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(builder: (context) => const LandingPage()),
-        ); 
-        toast(context, 'Logged out successfully');
-        await SharedPreferencesUtil.removeToken();
-      } 
-    } 
-  }
-
   Future<bool> onWillPop(BuildContext context) async{
     return (await showDialog(
       context: context, 

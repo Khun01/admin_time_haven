@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:time_haven/screens/HomeFavoriteCartProfilePage/favorite_page.dart';
 import 'package:time_haven/screens/HomeFavoriteCartProfilePage/home_page.dart';
+import 'package:time_haven/screens/HomeFavoriteCartProfilePage/profile_page.dart';
 
 class Mainwrapper extends StatefulWidget {
   const Mainwrapper({super.key});
@@ -22,7 +23,7 @@ class _MainwrapperState extends State<Mainwrapper> {
             const HomePage(),
             const FavoritePage(),
             Container(color: Colors.blue),
-            Container(color: Colors.green),
+            const ProfilePage()
           ],
         ),
       ),

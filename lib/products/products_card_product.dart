@@ -1,7 +1,12 @@
+import 'dart:async';
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:time_haven/components/favorite_icon.dart';
 import 'package:time_haven/models/products.dart';
+import 'package:time_haven/services/auth_services.dart';
+import 'package:time_haven/services/shared_preferences.dart';
 
 class ProductsCardProduct extends StatefulWidget {
 
@@ -28,9 +33,38 @@ class ProductsCardProduct extends StatefulWidget {
 
 class _ProductsCardProductState extends State<ProductsCardProduct> {
 
+  int? userId;
+
+  @override
+  void initState(){
+    super.initState();
+    loadUserData();
+  }
+
+  Future<void> loadUserData() async{
+    String? userJson = await SharedPreferencesUtil.getUser();
+    try{
+      if(userJson != null){
+        var userMap = jsonDecode(userJson);
+        setState(() {
+          userId = userMap['id'];
+        });
+        logger.d('User is this: $userId');
+      }
+    }catch(e){
+      logger.e('Failed to load user data: $e');
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     double popularityValue = double.tryParse(widget.popularity) ?? 0;
+    if(userId == null){
+      return const Scaffold(
+        backgroundColor: Color(0xFFF6F6F6),
+        body: Center(child: CircularProgressIndicator()),
+      );
+    }
     return Scaffold(
       backgroundColor: const Color(0xFFF6F6F6),
       body: Stack(
@@ -89,7 +123,7 @@ class _ProductsCardProductState extends State<ProductsCardProduct> {
                             ),
                           ),
                           const Spacer(),
-                          FavoriteIcon(products: widget.products)
+                          FavoriteIcon(products: widget.products, userId: userId.toString()),
                         ],
                       ),
                       Text(
