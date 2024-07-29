@@ -10,6 +10,7 @@ class Products{
   final double popularity;
   final double price;
   final String description;
+  final DateTime createdAt;
 
   Products({
     required this.id,
@@ -23,6 +24,7 @@ class Products{
     required this.popularity, 
     required this.price,
     required this.description,
+    required this.createdAt,
   });
 
   factory Products.fromJson(Map<String, dynamic> json){
@@ -38,6 +40,7 @@ class Products{
       popularity: double.tryParse(json['popularity']) ?? 0.0, 
       price: double.tryParse(json['price']) ?? 0.0, 
       description: json['description'],
+      createdAt: DateTime.parse(json['created_at'])
     );
   }
 
@@ -49,7 +52,7 @@ class Products{
 
   @override
   String toString(){
-    return 'Products{id: $id, image1: $image1, image2: $image2, image3: $image3, image4: $image4, image5: $image5, brand: $brand, name: $name, popularity: $popularity, price: $price, description: $description}';
+    return 'Products{id: $id, image1: $image1, image2: $image2, image3: $image3, image4: $image4, image5: $image5, brand: $brand, name: $name, popularity: $popularity, price: $price, description: $description, created_at: ${createdAt.toIso8601String()}}';
   }
 
 }

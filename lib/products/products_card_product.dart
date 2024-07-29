@@ -60,13 +60,13 @@ class _ProductsCardProductState extends State<ProductsCardProduct> {
   Widget build(BuildContext context) {
     double popularityValue = double.tryParse(widget.popularity) ?? 0;
     if(userId == null){
-      return const Scaffold(
-        backgroundColor: Color(0xFFF6F6F6),
-        body: Center(child: CircularProgressIndicator()),
+      return Container(
+        color: const Color(0xFFF4F4F4),
+        child: const Center(child: CircularProgressIndicator()),
       );
     }
     return Scaffold(
-      backgroundColor: const Color(0xFFF6F6F6),
+      backgroundColor: const Color(0xFFF4F4F4),
       body: Stack(
         clipBehavior: Clip.none,
         children: [
@@ -165,12 +165,12 @@ class _ProductsCardProductState extends State<ProductsCardProduct> {
             right: 0,
             child: Image.network(
               widget.image,
-              fit: BoxFit.cover,
+              fit: BoxFit.contain,
               height: 120,
             )
           )
         ],
       ),
-    ); 
+    );
   }
 }

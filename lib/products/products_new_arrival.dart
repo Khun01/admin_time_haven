@@ -21,7 +21,7 @@ class ProductsNewArrival extends StatefulWidget {
     required this.name,
     required this.description,
     required this.price,
-    required this.products
+    required this.products,
   });
 
   @override
@@ -106,7 +106,7 @@ class _ProductsNewArrivalState extends State<ProductsNewArrival> {
                       widget.image,
                       height: 110,
                       width: double.infinity,
-                      fit: BoxFit.cover,
+                      fit: BoxFit.contain,
                     ),
                   ),
                 ),

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-class ProductsCard extends StatelessWidget {
+class ProductsCardPopular extends StatelessWidget {
 
   final String image1;
   final String brand;
@@ -9,7 +9,7 @@ class ProductsCard extends StatelessWidget {
   final String popularity;
   final String price;
 
-  const ProductsCard({
+  const ProductsCardPopular({
     super.key,
     required this.image1,
     required this.brand,
@@ -64,12 +64,17 @@ class ProductsCard extends StatelessWidget {
                         color: const Color(0xFFF4F4F4)
                       ),
                     ),
-                    Text(
-                      name,
-                      style: GoogleFonts.nunito(
-                        fontSize: 12,
-                        fontWeight: FontWeight.bold,
-                        color: const Color(0xCCF4F4F4)
+                    SizedBox(
+                      width: 200,
+                      child: Text(
+                        name,
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        style: GoogleFonts.nunito(
+                          fontSize: 12,
+                          fontWeight: FontWeight.bold,
+                          color: const Color(0xCCF4F4F4)
+                        ),
                       ),
                     ),
                     const Spacer(),
@@ -113,7 +118,7 @@ class ProductsCard extends StatelessWidget {
                 decoration: BoxDecoration(
                   image: DecorationImage(
                     image: NetworkImage(image1),
-                    fit: BoxFit.cover,
+                    fit: BoxFit.contain,
                   )
                 ),
               ),

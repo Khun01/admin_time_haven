@@ -19,9 +19,9 @@ class FavoritePage extends StatefulWidget {
 class _FavoritePageState extends State<FavoritePage> {
 
   final PageController pageController = PageController();
-  int activePage = 0;
 
   late List<Products> products = [];
+  late List<Products> filteredProducts = [];
   bool isLoading = true;
 
   @override
@@ -47,6 +47,33 @@ class _FavoritePageState extends State<FavoritePage> {
       username = userMap['name'];
     }
     setState(() {});
+  }
+
+  void searchProducts(String query) async{
+    setState(() {
+      isLoading = true;
+    });
+    try{
+     if(query.isEmpty){
+      filteredProducts = products;
+     }else{
+      filteredProducts = products.where((product){
+        final queryLower = query.toLowerCase();
+        return product.name.toLowerCase().contains(queryLower) ||
+               product.brand.toLowerCase().contains(queryLower);
+      }).toList();
+      logger.d('Search result found: ${filteredProducts.length} items');
+      if(filteredProducts.isEmpty){
+        logger.d('No results were found for query: $query');
+      }
+     }
+    }catch(e){
+      logger.d(e);
+    }finally{
+      setState(() {
+        isLoading = false;
+      });
+    }
   }
 
   @override
@@ -80,7 +107,7 @@ class _FavoritePageState extends State<FavoritePage> {
             const SizedBox(height: 20),
             SearchBarWidget(
               onSearch: (query){
-                    
+                searchProducts(query);
               },
             ),
             const SizedBox(height: 20),
@@ -106,15 +133,15 @@ class _FavoritePageState extends State<FavoritePage> {
                 )
               ) :
               ListView.builder(
-                itemCount: products.length,
+                itemCount: filteredProducts.length,
                 itemBuilder: (context, index){
                   return ProductsFavorite(
-                    product: products[index],
-                    image: '$baseUrl${products[index].image1}', 
-                    name: products[index].name,
-                    description: products[index].description,
-                    popularity: products[index].popularity.toString(), 
-                    price: products[index].price.toString()
+                    product: filteredProducts[index],
+                    image: '$baseUrl${filteredProducts[index].image1}', 
+                    name: filteredProducts[index].name,
+                    description: filteredProducts[index].description,
+                    popularity: filteredProducts[index].popularity.toString(), 
+                    price: filteredProducts[index].price.toString()
                   );
                 },
               ), 

@@ -7,7 +7,6 @@ import 'package:time_haven/components/form_login_signin.dart';
 import 'package:time_haven/components/my_button.dart';
 import 'package:time_haven/components/squaretile.dart';
 import 'package:time_haven/navigation/mainwrapper.dart';
-import 'package:time_haven/screens/HomeFavoriteCartProfilePage/home_page.dart';
 import 'package:time_haven/services/auth_services.dart';
 import 'package:time_haven/services/global.dart';
 import 'package:time_haven/services/shared_preferences.dart';

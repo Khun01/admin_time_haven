@@ -59,9 +59,7 @@ class _ProductsFavoriteState extends State<ProductsFavorite> {
   Widget build(BuildContext context) {
     double popularityValue = double.tryParse(widget.popularity) ?? 0;
     if(userId == null){
-      return Container(
-        child: Center(child: CircularProgressIndicator()),
-      );
+      return const Center(child: CircularProgressIndicator());
     }
     return Container(
       padding: const EdgeInsets.all(7.5),
@@ -102,7 +100,7 @@ class _ProductsFavoriteState extends State<ProductsFavorite> {
             ),
             child: Image.network(
               widget.image,
-              fit: BoxFit.cover,
+              fit: BoxFit.contain,
             ),
           ),
           const SizedBox(width: 10),

@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:time_haven/models/products.dart';
+import 'package:time_haven/services/auth_services.dart';
 
 class SearchBarWidget extends StatefulWidget {
   final Function(String) onSearch;
@@ -9,11 +11,16 @@ class SearchBarWidget extends StatefulWidget {
 }
 
 class _SearchBarWidgetState extends State<SearchBarWidget> {
-  String query = '';
+  final TextEditingController controller = TextEditingController();
+  bool hasText = false;
 
-  void onQueryChanged(String newQuery){
-    setState(() {
-      query = newQuery;
+  @override
+  void initState(){
+    super.initState();
+    controller.addListener((){
+      setState(() {
+        hasText = controller.text.isNotEmpty;
+      });
     });
   }
 
@@ -36,6 +43,7 @@ class _SearchBarWidgetState extends State<SearchBarWidget> {
               ],
             ),
             child: TextField(
+              controller: controller,
               decoration: InputDecoration(
                 filled: true,
                 fillColor: const Color(0xFFF4F4F4),
@@ -50,28 +58,52 @@ class _SearchBarWidgetState extends State<SearchBarWidget> {
                 focusedBorder: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(15),
                   borderSide: BorderSide.none
-                )
+                ),
+                suffixIcon: hasText ? 
+                GestureDetector(
+                  onTap: (){
+                    controller.clear();
+                    widget.onSearch('');
+                  },
+                  child: const Icon(
+                    Icons.close,
+                    color: Color(0xFF3B3B3B),
+                  ),
+                ): null
               ),
             ),
           ),
         ),
         const SizedBox(width: 10),
-        Container(
-          padding: const EdgeInsets.all(15),
-          decoration: BoxDecoration(
-            color: const Color(0xFFF4F4F4),
-            borderRadius: BorderRadius.circular(15),
-            border: Border.all(color: const Color(0x333B3B3B)),
-            boxShadow: [
-              BoxShadow(
-                color: Colors.black.withOpacity(0.6),
-                offset: const Offset(0.0, 10.0),
-                blurRadius: 10.0,
-                spreadRadius: -6.0
-              ),
-            ]
+        GestureDetector(
+          onTap: () {
+            final query = controller.text.trim();
+            if(query.isNotEmpty){
+              widget.onSearch(query);
+            }else{
+              widget.onSearch('');
+            }
+          },
+          child: Container(
+            padding: const EdgeInsets.all(15),
+            decoration: BoxDecoration(
+              color: const Color(0xFFF4F4F4),
+              borderRadius: BorderRadius.circular(15),
+              border: Border.all(color: const Color(0x333B3B3B)),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black.withOpacity(0.6),
+                  offset: const Offset(0.0, 10.0),
+                  blurRadius: 10.0,
+                  spreadRadius: -6.0
+                ),
+              ]
+            ),
+            child: const Icon(
+              Icons.search,
+              color: Color(0xFF3B3B3B),
+            ),
           ),
-          child: const Icon(Icons.search, color: Color(0xFF3B3B3B)),
         ),
       ],
     );

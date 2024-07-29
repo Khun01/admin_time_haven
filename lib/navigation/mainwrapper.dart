@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:time_haven/screens/HomeFavoriteCartProfilePage/cat_page.dart';
 import 'package:time_haven/screens/HomeFavoriteCartProfilePage/favorite_page.dart';
 import 'package:time_haven/screens/HomeFavoriteCartProfilePage/home_page.dart';
 import 'package:time_haven/screens/HomeFavoriteCartProfilePage/profile_page.dart';
@@ -19,11 +20,11 @@ class _MainwrapperState extends State<Mainwrapper> {
       body: SafeArea(
         child: IndexedStack(
           index: selectedIndex,
-          children: [
-            const HomePage(),
-            const FavoritePage(),
-            Container(color: Colors.blue),
-            const ProfilePage()
+          children: const [
+            HomePage(),
+            FavoritePage(),
+            CartPage(),
+            ProfilePage()
           ],
         ),
       ),

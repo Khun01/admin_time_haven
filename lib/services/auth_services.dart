@@ -162,4 +162,23 @@ class AuthServices{
       return false;
     }
   }
+
+  //Search for products
+  static Future<List<Products>> searchProducts(String query) async {
+    String? token = await SharedPreferencesUtil.getToken();
+    var url = Uri.parse('$baseUrl/api/products/search?query=$query');
+    final response = await http.get(
+      url,
+      headers: {
+        ...headers,
+        'Authorization': 'Bearer $token'
+      }
+    );
+    if(response.statusCode == 200){
+      List<dynamic> data = json.decode(response.body);
+      return data.map((item) => Products.fromJson(item)).toList();
+    }else{
+      throw Exception('Failed to load products');
+    }
+  }
 }
