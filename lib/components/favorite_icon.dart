@@ -1,19 +1,17 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:time_haven/models/products.dart';
 import 'package:time_haven/services/auth_services.dart';
-import 'package:time_haven/services/shared_preferences.dart';
+import 'package:time_haven/services/favorite_provider.dart';
 
 class FavoriteIcon extends StatefulWidget {
-
-  final Products products;
+  final Products product;
   final int iconSize;
-  final String? userId;
 
   const FavoriteIcon({
     super.key,
-    required this.products,
-    this.iconSize = 14,
-    required this.userId,
+    required this.product,
+    this.iconSize = 16
   });
 
   @override
@@ -21,58 +19,20 @@ class FavoriteIcon extends StatefulWidget {
 }
 
 class _FavoriteIconState extends State<FavoriteIcon> {
-  bool isFavorite = false;
-
-  @override
-  void initState(){
-    super.initState();
-    _checkIfFavorite();
-  }
-
-  Future<void> _checkIfFavorite() async{
-    if (widget.userId == null || widget.userId!.isEmpty) {
-      logger.d('User ID is null, cannot check favorite status');
-      return;
-    }
-    try {
-      List<int> favoriteIds = await SharedPreferencesUtil.getProductId(widget.userId!);
-      setState(() {
-        isFavorite = favoriteIds.contains(int.parse(widget.products.id.toString()));
-      });
-      logger.d('User ${widget.userId} - Product ${widget.products.id} isFavorite: $isFavorite');
-    }catch(e){
-      logger.d('Error cehcking if favorite: $e');
-    }
-  }
-
-  Future<void> toggleFavorites() async{
-    if(isFavorite){
-      bool result = await AuthServices.removeFromFavorites(widget.products.id.toString());
-      if(result){
-        await SharedPreferencesUtil.removeProducts(widget.userId!, widget.products.id.toString());
-        setState(() {
-          isFavorite = false;
-        });
-      }else{
-        logger.d('Failed to remove from favorites');
-      }
-    }else{
-      bool result = await AuthServices.addToFavorites(widget.products.id.toString());
-      if(result){
-        await SharedPreferencesUtil.saveProduct(widget.userId!, widget.products);
-        setState(() {
-          isFavorite = true;
-        });
-      }else{
-        logger.d('Failed to add products to favorites');
-      }
-    }
-  }
-  
   @override
   Widget build(BuildContext context) {
+    var favoriteProviders = Provider.of<FavoriteProvider>(context);
+    bool isFavorite = favoriteProviders.isFavorite(widget.product.id.toString());
     return GestureDetector(
-      onTap: toggleFavorites,
+      onTap: () async{
+        if(isFavorite){
+          await AuthServices.removeFromFavorites(widget.product.id.toString());
+          favoriteProviders.removeFavorites(widget.product.id.toString());
+        }else{
+          await AuthServices.addToFavorites(widget.product.id.toString());
+          favoriteProviders.addFavorites(widget.product);
+        }
+      },
       child: Icon(
         isFavorite ? Icons.favorite : Icons.favorite_outline,
         color: const Color(0xFFE2B34B),

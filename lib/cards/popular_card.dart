@@ -83,9 +83,9 @@ class ProductsCardPopular extends StatelessWidget {
                         Row(
                           children: List.generate(5, (index){
                             if(index < popularityValue.floor()){
-                              return const Icon(Icons.star, color: Colors.yellow, size: 15);
+                              return const Icon(Icons.star, color: Color(0xFFFFD872), size: 15);
                             }
-                            return const Icon(Icons.star_outline, color: Colors.yellow, size: 15);
+                            return const Icon(Icons.star_outline, color: Color(0xFFFFD872), size: 15);
                           }),
                         ),
                         const SizedBox(width: 3),

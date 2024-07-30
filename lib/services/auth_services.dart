@@ -82,7 +82,7 @@ class AuthServices{
     return productList;
   }
 
-  static Future<List<Products>> fetchFavorites() async{
+  static Future<List<Products>> fetchFavorites(String userId) async{
     String? token = await SharedPreferencesUtil.getToken();
     var url = Uri.parse('$baseUrl/api/favorites');
     final response = await http.get(

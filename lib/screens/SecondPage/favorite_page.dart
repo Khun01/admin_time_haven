@@ -1,10 +1,9 @@
-import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:time_haven/components/profile_image.dart';
 import 'package:time_haven/components/search_bar.dart';
 import 'package:time_haven/models/products.dart';
-import 'package:time_haven/products/products_favorite.dart';
+import 'package:time_haven/cards/favorite_card.dart';
 import 'package:time_haven/services/auth_services.dart';
 import 'package:time_haven/services/global.dart';
 import 'package:time_haven/services/shared_preferences.dart';
@@ -17,37 +16,40 @@ class FavoritePage extends StatefulWidget {
 }
 
 class _FavoritePageState extends State<FavoritePage> {
-
-  final PageController pageController = PageController();
-
   late List<Products> products = [];
   late List<Products> filteredProducts = [];
   bool isLoading = true;
+  String username = '';
 
   @override
   void initState(){
     super.initState();
+    fetchFavorites();
     loadUserData();
-    getProducts();
-  }
-
-  String? username;
-
-  Future<void> getProducts() async{
-    products = await AuthServices.fetchFavorites();
-    setState(() {
-      isLoading = false;
-    });
   }
 
   Future<void> loadUserData() async{
-    String? userJson = await SharedPreferencesUtil.getUser();
-    if(userJson != null){
-      var userMap = jsonDecode(userJson);
-      username = userMap['name'];
-    }
-    setState(() {});
+    final fetchedUername = await SharedPreferencesUtil.getUsername();
+    setState(() {
+      username = fetchedUername ?? 'Username';
+    });
   }
+
+  Future<void> fetchFavorites() async{
+    final userId = await SharedPreferencesUtil.getUserId();
+    if(userId != null){
+      products = await AuthServices.fetchFavorites(userId);
+      setState(() {
+        filteredProducts = products;
+        isLoading = false;
+      });
+    }else{
+      setState(() {
+        isLoading = false;
+      });
+    }
+  }
+
 
   void searchProducts(String query) async{
     setState(() {
@@ -76,8 +78,13 @@ class _FavoritePageState extends State<FavoritePage> {
     }
   }
 
+  Future<void> refreshFavorites() async{
+    await fetchFavorites();
+  }
+  
   @override
   Widget build(BuildContext context) {
+    fetchFavorites();
     return Scaffold(
       backgroundColor: const Color(0xFFF4F4F4),
       body: Container(
@@ -90,7 +97,7 @@ class _FavoritePageState extends State<FavoritePage> {
                 const ProfileImage(imagePath: 'assets/images/facebook.png'),
                 const SizedBox(width: 25),
                 Text(
-                  '$username',
+                  username.toString(),
                   style: GoogleFonts.nunito(
                     fontSize: 18,
                     fontWeight: FontWeight.bold,
@@ -120,30 +127,33 @@ class _FavoritePageState extends State<FavoritePage> {
               ),
             ),
             Expanded(
-              child: isLoading ? const Center(child: CircularProgressIndicator()) : 
-              products.isEmpty ? 
-              Center(
-                child: Text(
-                  "You currently don't have favorites",
-                  style: GoogleFonts.nunito(
-                    fontSize: 16,
-                    fontWeight: FontWeight.w500,
-                    color: const Color(0xFF3B3B3B)
-                  ),
-                )
-              ) :
-              ListView.builder(
-                itemCount: filteredProducts.length,
-                itemBuilder: (context, index){
-                  return ProductsFavorite(
-                    product: filteredProducts[index],
-                    image: '$baseUrl${filteredProducts[index].image1}', 
-                    name: filteredProducts[index].name,
-                    description: filteredProducts[index].description,
-                    popularity: filteredProducts[index].popularity.toString(), 
-                    price: filteredProducts[index].price.toString()
-                  );
-                },
+              child: RefreshIndicator(
+                onRefresh: refreshFavorites,
+                child: isLoading ? const Center(child: CircularProgressIndicator()) : 
+                products.isEmpty ? 
+                Center(
+                  child: Text(
+                    "You currently don't have favorites",
+                    style: GoogleFonts.nunito(
+                      fontSize: 16,
+                      fontWeight: FontWeight.w500,
+                      color: const Color(0xFF3B3B3B)
+                    ),
+                  )
+                ) :
+                ListView.builder(
+                  itemCount: filteredProducts.length,
+                  itemBuilder: (context, index){
+                    return ProductsFavorite(
+                      product: filteredProducts[index],
+                      image: '$baseUrl${filteredProducts[index].image1}', 
+                      name: filteredProducts[index].name,
+                      description: filteredProducts[index].description,
+                      popularity: filteredProducts[index].popularity.toString(), 
+                      price: filteredProducts[index].price.toString(),       
+                    );
+                  },
+                ),
               ), 
             )
           ],

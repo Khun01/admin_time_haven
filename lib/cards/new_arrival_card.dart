@@ -1,15 +1,11 @@
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:time_haven/components/favorite_icon.dart';
 import 'package:time_haven/models/products.dart';
-import 'package:time_haven/services/auth_services.dart';
-import 'package:time_haven/services/shared_preferences.dart';
 
 class ProductsNewArrival extends StatefulWidget {
 
-  final Products products;
+  final Products product;
   final String image;
   final String name;
   final String description;
@@ -21,7 +17,7 @@ class ProductsNewArrival extends StatefulWidget {
     required this.name,
     required this.description,
     required this.price,
-    required this.products,
+    required this.product,
   });
 
   @override
@@ -29,37 +25,8 @@ class ProductsNewArrival extends StatefulWidget {
 }
 
 class _ProductsNewArrivalState extends State<ProductsNewArrival> {
-  int? userId;
-
-  @override
-  void initState(){
-    super.initState();
-    loadUserData();
-  }
-
-  Future<void> loadUserData() async{
-    String? userJson = await SharedPreferencesUtil.getUser();
-    try{
-      if(userJson != null){
-        var userMap = jsonDecode(userJson);
-        setState(() {
-          userId = userMap['id'];
-        });
-        logger.d('User is this: $userId');
-      }
-    }catch(e){
-      logger.e('Failed to load user data: $e');
-    }
-  }
-  
   @override
   Widget build(BuildContext context) {
-    if(userId == null){
-      return const Scaffold(
-        backgroundColor: Color(0xFFF6F6F6),
-        body: Center(child: CircularProgressIndicator()),
-      );
-    }
     return Scaffold(
       backgroundColor: const Color(0xFFF6F6F6),
       body: Container(
@@ -132,7 +99,9 @@ class _ProductsNewArrivalState extends State<ProductsNewArrival> {
                           ),
                         ),
                       ),
-                      FavoriteIcon(products: widget.products, userId: userId.toString()),
+                      FavoriteIcon(
+                        product: widget.product,
+                      ),
                     ],
                   ),
                   const SizedBox(height: 2.5),

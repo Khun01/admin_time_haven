@@ -1,8 +1,15 @@
 import 'package:flutter/material.dart';
-import 'package:time_haven/screens/LoginRegisterPage/splash_screen.dart';
+import 'package:provider/provider.dart';
+import 'package:time_haven/screens/FirstPage/splash_screen.dart';
+import 'package:time_haven/services/favorite_provider.dart';
 
-void main() {
-  runApp(const MyApp());
+void main() async{
+  runApp(
+    ChangeNotifierProvider(
+      create: (context) => FavoriteProvider(),
+      child: const MyApp(),
+    )
+  );
 }
 
 class MyApp extends StatelessWidget {

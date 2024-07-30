@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:time_haven/screens/LoginRegisterPage/landing_page.dart';
+import 'package:time_haven/screens/FirstPage/landing_page.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});

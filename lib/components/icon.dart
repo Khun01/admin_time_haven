@@ -5,7 +5,7 @@ class IconText extends StatelessWidget {
 
   final IconData icon;
   final String text1;
-  final String text2;
+  final String? text2;
   final Color iconColor;
   final VoidCallback onTap;
   
@@ -13,7 +13,7 @@ class IconText extends StatelessWidget {
     super.key,
     required this.icon,
     required this.text1,
-    this.text2 = '',
+    this.text2,
     this.iconColor = const Color(0xFFE2B34B),
     required this.onTap,
   });
@@ -37,15 +37,14 @@ class IconText extends StatelessWidget {
               children: [
                 Text(
                   text1,
-                  textAlign: text2.isEmpty ? TextAlign.center : TextAlign.start,
                   style: GoogleFonts.nunito(
                     color: const Color(0xCC3B3B3B),
                     fontSize: 14,
                   ),
                 ),
-                if(text2.isNotEmpty)...[
+                if(text2 != null && text2!.isNotEmpty)...[
                   Text(
-                    text2,
+                    text2!,
                     style: GoogleFonts.nunito(
                       color: const Color(0x803B3B3B),
                       fontSize: 10,

@@ -3,11 +3,13 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:http/http.dart' as http;
+import 'package:provider/provider.dart';
 import 'package:time_haven/components/form_login_signin.dart';
 import 'package:time_haven/components/my_button.dart';
 import 'package:time_haven/components/squaretile.dart';
-import 'package:time_haven/navigation/mainwrapper.dart';
+import 'package:time_haven/mainwrapper.dart';
 import 'package:time_haven/services/auth_services.dart';
+import 'package:time_haven/services/favorite_provider.dart';
 import 'package:time_haven/services/global.dart';
 import 'package:time_haven/services/shared_preferences.dart';
 
@@ -38,12 +40,13 @@ class _LoginPageState extends State<LoginPage> {
     if(email.text.isNotEmpty && password.text.isNotEmpty){
       http.Response response = await AuthServices.login(email.text, password.text);
       if(response.statusCode == 200){
-        var responseData = jsonDecode(response.body);
-        var userMap = responseData['user'];
-        String user = (userMap is Map<String, dynamic>) ? jsonEncode(userMap) : userMap.toString();
+        final responseData = jsonDecode(response.body);
         String token = responseData['token'];
+        Map<String, dynamic> user = responseData['user'];
         if(token.isNotEmpty){
           await SharedPreferencesUtil.saveUserData(user, token);
+          // ignore: use_build_context_synchronously
+          Provider.of<FavoriteProvider>(context, listen: false).updateFavorites();
           if(context.mounted){
             FocusScope.of(context).unfocus();
             toast(context, 'Logged in Successfully');

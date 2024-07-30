@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:slide_to_act/slide_to_act.dart';
-import 'package:time_haven/navigation/mainwrapper.dart';
-import 'package:time_haven/screens/LoginRegisterPage/login_page.dart';
-import 'package:time_haven/screens/LoginRegisterPage/register_page.dart';
+import 'package:time_haven/mainwrapper.dart';
+import 'package:time_haven/screens/FirstPage/login_page.dart';
+import 'package:time_haven/screens/FirstPage/register_page.dart';
 import 'package:time_haven/services/shared_preferences.dart';
 
 class LandingPage extends StatefulWidget {

@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:time_haven/screens/HomeFavoriteCartProfilePage/cat_page.dart';
-import 'package:time_haven/screens/HomeFavoriteCartProfilePage/favorite_page.dart';
-import 'package:time_haven/screens/HomeFavoriteCartProfilePage/home_page.dart';
-import 'package:time_haven/screens/HomeFavoriteCartProfilePage/profile_page.dart';
+import 'package:time_haven/screens/SecondPage/cart_page.dart';
+import 'package:time_haven/screens/SecondPage/favorite_page.dart';
+import 'package:time_haven/screens/SecondPage/home_page.dart';
+import 'package:time_haven/screens/SecondPage/profile_page.dart';
 
 class Mainwrapper extends StatefulWidget {
   const Mainwrapper({super.key});
