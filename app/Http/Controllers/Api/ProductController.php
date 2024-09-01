@@ -11,7 +11,7 @@ class ProductController extends Controller
 {
     public function index()
     {
-        $products = Product::all();
+        $products = Product::where('quantity', '>', 0)->get();
         return response()->json($products);
     }
 
@@ -52,5 +52,16 @@ class ProductController extends Controller
         }
 
         return response()->json($favorites);
+    }
+
+    public function search(Request $request)
+    {
+        $query = $request->input('query');
+        $products = Product::where('name', 'LIKE', "%{$query}%")
+                            ->orWhere('description', 'LIKE', "%{$query}%")
+                            ->orWhere('brand', 'LIKE', "%{$query}%")
+                            ->get();
+        
+        return response()->json($products);
     }
 }

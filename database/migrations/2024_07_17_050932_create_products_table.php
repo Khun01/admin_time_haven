@@ -23,6 +23,7 @@ return new class extends Migration
             $table->decimal('popularity');
             $table->decimal('price');
             $table->longText('description');
+            $table->integer('quantity')->default(0); 
             $table->timestamps();
         });
     }

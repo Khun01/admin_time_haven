@@ -45,6 +45,21 @@ class UserCrudController extends CrudController
          * Columns can be defined using the fluent syntax:
          * - CRUD::column('price')->type('number');
          */
+        CRUD::addColumn([
+            'name' => 'profile',
+            'label' => 'Profile',
+            'type' => 'text',
+        ]);
+        CRUD::addColumn([
+            'name' => 'address',
+            'label' => 'Address',
+            'type' => 'text',
+        ]);
+        CRUD::addColumn([
+            'name' => 'phone_number',
+            'label' => 'Phone Number',
+            'type' => 'text',
+        ]);
     }
 
     /**
@@ -62,6 +77,7 @@ class UserCrudController extends CrudController
          * Fields can be defined using the fluent syntax:
          * - CRUD::field('price')->type('number');
          */
+        CRUD::field('profile')->type('upload')->upload(true);
     }
 
     /**
@@ -73,5 +89,7 @@ class UserCrudController extends CrudController
     protected function setupUpdateOperation()
     {
         $this->setupCreateOperation();
+
+        CRUD::field('profile')->type('upload')->upload(true);
     }
 }

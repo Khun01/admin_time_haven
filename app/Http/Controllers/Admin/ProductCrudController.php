@@ -45,12 +45,11 @@ class ProductCrudController extends CrudController
          * Columns can be defined using the fluent syntax:
          * - CRUD::column('price')->type('number');
          */
-        // CRUD::addColumn([
-        //     'name' => 'full_image1',
-        //     'label' => 'Image 1',
-        //     'type' => 'image',
-        //     'prefix' => '',
-        // ]);
+        CRUD::addColumn([
+            'name' => 'quantity',
+            'label' => 'Quantity',
+            'type' => 'text',
+        ]);
 
         // CRUD::addColumn([
         //     'name' => 'full_image2',
@@ -92,6 +91,7 @@ class ProductCrudController extends CrudController
     {
         CRUD::setValidation(ProductRequest::class);
         CRUD::setFromDb(); // set fields from db columns.
+        CRUD::field('quantity')->type('text'); 
         CRUD::field('image1')->type('upload')->upload(true);
         CRUD::field('image2')->type('upload')->upload(true);
         CRUD::field('image3')->type('upload')->upload(true);

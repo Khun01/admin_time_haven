@@ -4,6 +4,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\ApiController;
 use App\Http\Controllers\Api\ProductController;
+use App\Http\Controllers\Api\CommentController;
 
 //Register
 Route::post("register", [ApiController::class,"register"]);
@@ -15,7 +16,7 @@ Route::group(['middleware' => ["auth:sanctum"]],function(){
     //profile
     Route::get("profile", [ApiController::class,"profile"]);
     //Logout
-    Route::get("logout", [ApiController::class,"logout"]);
+    Route::post("logout", [ApiController::class,"logout"]);
     //Product
     Route::get('products', [ProductController::class, 'index']);
     //Add to favorites
@@ -24,6 +25,13 @@ Route::group(['middleware' => ["auth:sanctum"]],function(){
     Route::delete('favorites/{productId}', [ProductController::class, 'removeFromFavorites']);
     //show favorites
     Route::get('favorites', [ProductController::class, 'getFavorites']);
+    //search products
+    Route::get('products/search', [ProductController::class, 'search']);
+    //Get the comments on a specific product
+    Route::post('comments', [CommentController::class, 'store']);
+    //Add a comment on a specific product
+    Route::get('comments/{productId}', [CommentController::class, 'index']);
+
 });
 
 // Route::get('/user', function (Request $request) {

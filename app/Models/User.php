@@ -9,6 +9,8 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Support\Str; 
+use Illuminate\Support\Facades\Storage;
 
 class User extends Authenticatable
 {
@@ -24,6 +26,9 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'profile',
+        'address',
+        'phone_number',
     ];
 
     /**
@@ -52,5 +57,27 @@ class User extends Authenticatable
     public function favorites(): BelongsToMany
     {
         return $this->belongsToMany(Product::class, 'favorites', 'user_id', 'product_id');
+    }
+
+    protected static function boot()
+    {
+        parent::boot();
+
+        static::saving(function ($user){
+            $user->profile = static::handleImageUpload(request(), 'profile', $user->profile);
+        });
+    }
+
+    protected static function handleImageUpload($request, $fieldName, $currentValue)
+    {
+        if($request->hasFile($fieldName))
+        {
+            $image = $request->file($fieldName);
+            $path = $image->store('public/profile');
+            return Storage::url($path);
+        }
+
+        return $currentValue;
+
     }
 }

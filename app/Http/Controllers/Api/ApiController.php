@@ -85,6 +85,9 @@ class ApiController extends Controller
                     'id' => $user->id,
                     'name' => $user->name,
                     'email' => $user->email,
+                    'profile' => $user->profile,
+                    'address' => $user->address,
+                    'phone_number' => $user->phone_number,
                 ]
             ], 200);
 

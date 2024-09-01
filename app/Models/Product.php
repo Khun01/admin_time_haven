@@ -24,6 +24,7 @@ class Product extends Model
         'popularity',
         'price',
         'description',
+        'quantity',
     ];
 
     protected static function boot()
