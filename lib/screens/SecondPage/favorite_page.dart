@@ -84,7 +84,6 @@ class _FavoritePageState extends State<FavoritePage> {
   
   @override
   Widget build(BuildContext context) {
-    fetchFavorites();
     return Scaffold(
       backgroundColor: const Color(0xFFF4F4F4),
       body: Container(

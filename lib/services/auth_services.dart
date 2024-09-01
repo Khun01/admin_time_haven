@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:time_haven/models/products.dart';
+import 'package:time_haven/models/comment.dart';
 import 'package:time_haven/services/global.dart';
 import 'package:http/http.dart' as http;
 import 'package:logger/logger.dart';
@@ -82,6 +83,7 @@ class AuthServices{
     return productList;
   }
 
+  // ---------For Favorites API----------//
   static Future<List<Products>> fetchFavorites(String userId) async{
     String? token = await SharedPreferencesUtil.getToken();
     var url = Uri.parse('$baseUrl/api/favorites');
@@ -163,7 +165,7 @@ class AuthServices{
     }
   }
 
-  //Search for products
+  // ---------For Search API----------//
   static Future<List<Products>> searchProducts(String query) async {
     String? token = await SharedPreferencesUtil.getToken();
     var url = Uri.parse('$baseUrl/api/products/search?query=$query');
@@ -179,6 +181,48 @@ class AuthServices{
       return data.map((item) => Products.fromJson(item)).toList();
     }else{
       throw Exception('Failed to load products');
+    }
+  }
+
+  // ---------For Comments API----------//
+  static Future<List<Comment>> fetchComments(int productId) async{
+    String? token = await SharedPreferencesUtil.getToken();
+    var url = Uri.parse('$baseUrl/api/comments/$productId');
+    final response = await http.get(
+      url,
+      headers:{
+        ...headers,
+        'Authorization': 'Bearer $token'
+      }
+    );
+    if(response.statusCode == 200){
+      List jsonResponse = json.decode(response.body);
+      List<Comment> comment = jsonResponse.map((comment) => Comment.fromJson(comment)).toList();
+      logger.d('nakooo Fetched Comments: $comment');
+      return comment;
+    }else{
+      throw Exception('Failed to load comments');
+    }
+  }
+
+  static Future<void> storeComment(int productId, String comments) async{
+     String? token = await SharedPreferencesUtil.getToken();
+    var url = Uri.parse('$baseUrl/api/comments');
+    final response = await http.post(
+      url,
+      headers:{
+        ...headers,
+        'Authorization': 'Bearer $token'
+      },
+      body: jsonEncode({
+        'product_id': productId,
+        'comment_text': comments
+      }),
+    );
+    if(response.statusCode == 200){
+      logger.d('Comment Added: ${response.body}');
+    }else{
+      logger.d('Failed to add the comment: ${response.statusCode}, ${response.body}');
     }
   }
 }

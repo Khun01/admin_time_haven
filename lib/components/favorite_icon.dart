@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:time_haven/models/products.dart';
 import 'package:time_haven/services/auth_services.dart';
 import 'package:time_haven/services/favorite_provider.dart';
+import 'package:time_haven/services/global.dart';
 
 class FavoriteIcon extends StatefulWidget {
   final Products product;
@@ -28,9 +29,13 @@ class _FavoriteIconState extends State<FavoriteIcon> {
         if(isFavorite){
           await AuthServices.removeFromFavorites(widget.product.id.toString());
           favoriteProviders.removeFavorites(widget.product.id.toString());
+          // ignore: use_build_context_synchronously
+          toast(context, 'Remove from favorites');
         }else{
           await AuthServices.addToFavorites(widget.product.id.toString());
           favoriteProviders.addFavorites(widget.product);
+          // ignore: use_build_context_synchronously
+          toast(context, 'Added to favorites');
         }
       },
       child: Icon(

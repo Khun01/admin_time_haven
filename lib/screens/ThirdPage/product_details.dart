@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:time_haven/components/comment_dialog.dart';
 import 'package:time_haven/components/favorite_icon.dart';
 import 'package:time_haven/components/product_detailes_images.dart';
 import 'package:time_haven/models/products.dart';
+import 'package:time_haven/services/global.dart';
+import 'package:time_haven/services/shared_preferences.dart';
 
 class ProductDetails extends StatefulWidget {
 
@@ -39,7 +42,7 @@ class ProductDetails extends StatefulWidget {
 
 class _ProductDetailsState extends State<ProductDetails> {
   String displayImage = '';
-  int? userId;
+  String? userId = '';
 
   @override
   void initState(){
@@ -47,10 +50,33 @@ class _ProductDetailsState extends State<ProductDetails> {
     displayImage = widget.image1 ?? '';
   }
 
+  Future<void> loadUserData() async{
+    final fetchedUserId = await SharedPreferencesUtil.getUserId();
+    setState(() {
+      userId = fetchedUserId ?? 'Id';
+    });
+  }
+
   void updateDisplayImage(String? imageUrl){
     setState(() {
       displayImage = imageUrl ?? '';
     });
+  }
+
+  void _showCommentBottomSheet(){
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(50))
+      ),
+      builder: (BuildContext context){
+        return SizedBox(
+          height: MediaQuery.of(context).size.height * 0.85,
+          child: CommentDialog(product: widget.product),
+        );
+      }
+    );
   }
 
   @override
@@ -147,6 +173,14 @@ class _ProductDetailsState extends State<ProductDetails> {
                         )
                       ],
                     ),
+                    Text(
+                      widget.name,
+                      style: GoogleFonts.nunito(
+                        fontSize: 16,
+                        fontWeight: FontWeight.w500,
+                        color: const Color(0xCC3B3B3b)
+                      ),
+                    ),
                     const SizedBox(height: 5),
                     Row(
                       children: [
@@ -232,57 +266,67 @@ class _ProductDetailsState extends State<ProductDetails> {
                     Row(
                       children: [
                         Expanded(
+                          child: GestureDetector(
+                            onTap: () {
+                              _showCommentBottomSheet();
+                            },
+                            child: Container(
+                              height: 50,
+                              padding: const EdgeInsets.all(10),
+                              decoration: BoxDecoration(
+                                color: const Color(0xFFAFAFAF),
+                                borderRadius: BorderRadius.circular(10)
+                              ),
+                              child: Row(
+                                children: [
+                                  const Icon(
+                                    Icons.comment,
+                                    size: 20,
+                                    color: Color(0xFF3B3B3B),
+                                  ),
+                                  const SizedBox(width: 5),
+                                  Text(
+                                    'Comment',
+                                    style: GoogleFonts.nunito(
+                                      fontSize: 12,
+                                      color: const Color(0xCC3B3B3B)
+                                    ),
+                                  )
+                                ],
+                              ),
+                            ),
+                          ),
+                        ),
+                        const SizedBox(width: 10),
+                        GestureDetector(
+                          onTap: (){
+                            toast(context, 'Buy Now');
+                          },
                           child: Container(
                             height: 50,
-                            padding: const EdgeInsets.all(10),
+                            padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
                             decoration: BoxDecoration(
-                              color: const Color(0xFFAFAFAF),
+                              color: const Color(0xFFE2B34B),
                               borderRadius: BorderRadius.circular(10)
                             ),
                             child: Row(
                               children: [
                                 const Icon(
-                                  Icons.comment,
+                                  Icons.shopping_cart_outlined,
                                   size: 20,
                                   color: Color(0xFF3B3B3B),
                                 ),
                                 const SizedBox(width: 5),
                                 Text(
-                                  'Comment',
+                                  'Buy now',
                                   style: GoogleFonts.nunito(
                                     fontSize: 12,
-                                    color: const Color(0xCC3B3B3B)
+                                    fontWeight: FontWeight.bold,
+                                    color: const Color(0xCC3B3B3B),
                                   ),
                                 )
                               ],
                             ),
-                          ),
-                        ),
-                        const SizedBox(width: 10),
-                        Container(
-                          height: 50,
-                          padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
-                          decoration: BoxDecoration(
-                            color: const Color(0xFFE2B34B),
-                            borderRadius: BorderRadius.circular(10)
-                          ),
-                          child: Row(
-                            children: [
-                              const Icon(
-                                Icons.shopping_cart_outlined,
-                                size: 20,
-                                color: Color(0xFF3B3B3B),
-                              ),
-                              const SizedBox(width: 5),
-                              Text(
-                                'Buy now',
-                                style: GoogleFonts.nunito(
-                                  fontSize: 12,
-                                  fontWeight: FontWeight.bold,
-                                  color: const Color(0xCC3B3B3B),
-                                ),
-                              )
-                            ],
                           ),
                         )
                       ],
